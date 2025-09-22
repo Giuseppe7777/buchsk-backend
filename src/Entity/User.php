@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -51,17 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isVerified = null;
-
-    /**
-     * @var Collection<int, UserOtp>
-     */
-    #[ORM\OneToMany(targetEntity: UserOtp::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $userOtps;
-
-    public function __construct()
-    {
-        $this->userOtps = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -210,36 +197,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserOtp>
-     */
-    public function getUserOtps(): Collection
-    {
-        return $this->userOtps;
-    }
-
-    public function addUserOtp(UserOtp $userOtp): static
-    {
-        if (!$this->userOtps->contains($userOtp)) {
-            $this->userOtps->add($userOtp);
-            $userOtp->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserOtp(UserOtp $userOtp): static
-    {
-        if ($this->userOtps->removeElement($userOtp)) {
-            // set the owning side to null (unless already changed)
-            if ($userOtp->getUser() === $this) {
-                $userOtp->setUser(null);
-            }
-        }
 
         return $this;
     }

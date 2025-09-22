@@ -4,9 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    twilio_sid: '%env(TWILIO_SID)%'
-    twilio_token: '%env(TWILIO_TOKEN)%'
-    twilio_from: '%env(TWILIO_FROM)%'
+    telnyx_api_key: '%env(TELNYX_API_KEY)%'
+    telnyx_message_template_id: '%env(TELNYX_MESSAGE_TEMPLATE_ID)%'
+    telnyx_verify_profile_id: '%env(TELNYX_VERIFY_PROFILE_ID)%'
 
 services:
     # default configuration for services in *this* file
@@ -19,5 +19,14 @@ services:
     App\:
         resource: '../src/'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # явна конфігурація для нашої команди
+    App\Command\CreateVerifyProfileCommand:
+        arguments:
+            $telnyx_api_key: '%telnyx_api_key%'
+            $telnyx_message_template_id: '%telnyx_message_template_id%'
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\TelnyxOtpService:
+        arguments:
+            $telnyx_api_key: '%telnyx_api_key%'
+            $telnyx_verify_profile_id: '%telnyx_verify_profile_id%'

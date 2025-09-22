@@ -4,24 +4,28 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\OtpService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\TelnyxOtpService;
 
 #[Route('/auth', name: 'auth_')]
 final class AuthController extends AbstractController
 {
+    public function __construct(
+      private TelnyxOtpService $telnyxOtp,
+    ) {}
+
     #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $hasher,
         UserRepository $users,
-        OtpService $otpService
+        \Psr\Log\LoggerInterface $logger,
       ): JsonResponse {
 
         // TODO: user register
@@ -66,16 +70,32 @@ final class AuthController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        $otpMeta = $otpService->send($user, enforceThrottle: false); // first time without a throttle
+        // send OTP
+        try {
+          $result = $this->telnyxOtp->sendOtp($phone);
+
+          if (isset($result['data'])) {
+              $logger->info('OTP sent', ['phone' => $phone, 'result' => $result]);
+              $message = 'User created. Verification SMS sent.';
+          } elseif (isset($result['errors'])) {
+              $logger->error('OTP sending failed', ['phone' => $phone, 'errors' => $result['errors']]);
+              $message = 'User created, but OTP failed to send. Please try resend.';
+          } else {
+              $logger->warning('Unexpected OTP response', ['phone' => $phone, 'result' => $result]);
+              $message = 'User created, but verification service returned unexpected response.';
+          }
+        } catch (\Throwable $e) {
+            $logger->critical('OTP send exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
+            $message = 'User created, but verification service unavailable. Please try later.';
+        }
 
         // Response
         return $this->json([
           'status' => JsonResponse::HTTP_CREATED,
-          'message' => 'User created. Verification SMS sent (if delivery fails, use resend)',
+          'message' => $message,
           'data' => [
             'id' => $user->getId(),
-            'phone' => $user->getPhone(),
-            'otp' => ['sent' => $otpMeta['sent'] ?? false, 'expiresIn' => $otpMeta['expiresIn'] ?? null],
+            'phone' => $user->getPhone()
           ],
         ], JsonResponse::HTTP_CREATED);
     }
@@ -83,31 +103,14 @@ final class AuthController extends AbstractController
     #[Route('/send-otp', name: 'send-otp', methods: ['POST'])]
     public function sendOtp(
         Request $request,
-        UserRepository $users,
-        OtpService $otpService
-    ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
-        $phone = $data['phone'] ?? null;
-        if (!$phone) {
-            return $this->json(['status'=>400,'message'=>'phone is required','data'=>null], 400);
-        }
-
-        // Анти-енумерація: у продакшні краще завжди повертати 200 з однаковим меседжем
-        $user = $users->findOneBy(['phone' => $phone]);
-        if (!$user) {
-            return $this->json(['status'=>200,'message'=>'If the account exists, an SMS has been sent','data'=>null], 200);
-        }
-        if ($user->isVerified()) {
-            return $this->json(['status'=>409,'message'=>'User already verified','data'=>null], 409);
-        }
-
-        $res = $otpService->send($user, enforceThrottle: true);
-        if (!($res['sent'] ?? false)) {
-            $msg = $res['reason'] === 'too_frequent' ? 'Try again in 60 seconds' : 'Too many requests';
-            return $this->json(['status'=>429,'message'=>$msg,'data'=>null], 429);
-        }
-
-        return $this->json(['status'=>200,'message'=>'OTP sent','data'=>['expiresIn'=>$res['expiresIn'] ?? 300]], 200);
+    ): JsonResponse 
+    {
+        // TODO: sent OTP 
+        return $this->json([
+          "status" => JsonResponse::HTTP_OK,
+          "message" => "otp verified (stub)",
+          "data" => null
+        ]);
     }
 
     #[Route('/verify-otp', name: 'verify-otp', methods: ['POST'])]
