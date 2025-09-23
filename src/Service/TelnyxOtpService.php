@@ -30,7 +30,7 @@ class TelnyxOtpService
             'json' => [
                 'phone_number'     => $phone,
                 'verify_profile_id'=> $this->verifyProfileId,
-                'timeout_secs'     => 300, // 5 хвилин
+                'timeout_secs'     => 300, 
             ],
         ]);
 

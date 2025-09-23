@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\TelnyxOtpService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 #[Route('/auth', name: 'auth_')]
 final class AuthController extends AbstractController
@@ -19,59 +20,58 @@ final class AuthController extends AbstractController
       private TelnyxOtpService $telnyxOtp,
     ) {}
 
-    #[Route('/register', name: 'register', methods: ['POST'])]
-    public function register(
-        Request $request,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $hasher,
-        UserRepository $users,
-        \Psr\Log\LoggerInterface $logger,
-      ): JsonResponse {
+  #[Route('/register', name: 'register', methods: ['POST'])]
+  public function register(
+      Request $request,
+      EntityManagerInterface $em,
+      UserPasswordHasherInterface $hasher,
+      UserRepository $users,
+      \Psr\Log\LoggerInterface $logger,
+  ): JsonResponse 
+  {
+      $data = json_decode($request->getContent(), true);
 
-        // TODO: user register
-        // read data
-        $data = json_decode($request->getContent(), true);
-        $phone = $data['phone'] ?? null;
-        $password = $data['password'] ?? null;
-        $firstName = $data['firstName'] ?? null;
-        $lastName = $data['lastName'] ?? null;
+      // validation
+      $validationError = $this->validateRegisterInput($data);
+      if ($validationError !== null) {
+          return $validationError;
+      }
 
-        // validation
-        if (!$phone || !$password || !$firstName || !$lastName) {
-          return $this->json([
-            'status' => JsonResponse::HTTP_BAD_REQUEST,
-            'message' => 'phone, password, firstName, lastName — are necessarily',
-            'data' => null
-          ], JsonResponse::HTTP_BAD_REQUEST);
-        }
+      $phone = $data['phone'];
+      $password = $data['password'];
+      $firstName = $data['firstName'];
+      $lastName = $data['lastName'];
 
-        // phone uniqueness check
-        if ($users->findOneBy(['phone' => $phone])) {
-          return $this->json([
-            'status' => JsonResponse::HTTP_CONFLICT,
-            'message' => 'a user with this phone number already exists',
-            'data' => null
-          ], JsonResponse::HTTP_CONFLICT);
-        }
+      // uniqueness check
+      if ($this->userExists($users, $phone)) {
+          return $this->conflictResponse();
+      }
 
-        // user creation
-        $user = new User();
-        $user->setPhone($phone);
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-        $user->setStatus('pending');
-        $user->setIsVerified(false);
+      // create user
+      $user = new User();
+      $user->setPhone($phone);
+      $user->setFirstName($firstName);
+      $user->setLastName($lastName);
+      $user->setStatus('pending');
+      $user->setIsVerified(false);
 
-        // password hash
-        $hashed = $hasher->hashPassword($user, $password);
-        $user->setPassword($hashed);
+      $hashed = $hasher->hashPassword($user, $password);
+      $user->setPassword($hashed);
 
-        // create
-        $em->persist($user);
-        $em->flush();
+      try {
+          $em->persist($user);
+          $em->flush();
+      } catch (UniqueConstraintViolationException $e) {
+          $logger->warning('User creation failed: phone already exists', [
+              'phone' => $phone,
+              'error' => $e->getMessage(),
+          ]);
 
-        // send OTP
-        try {
+          return $this->conflictResponse();
+      }
+
+      // send OTP
+      try {
           $result = $this->telnyxOtp->sendOtp($phone);
 
           if (isset($result['data'])) {
@@ -84,54 +84,161 @@ final class AuthController extends AbstractController
               $logger->warning('Unexpected OTP response', ['phone' => $phone, 'result' => $result]);
               $message = 'User created, but verification service returned unexpected response.';
           }
-        } catch (\Throwable $e) {
-            $logger->critical('OTP send exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
-            $message = 'User created, but verification service unavailable. Please try later.';
-        }
+      } catch (\Throwable $e) {
+          $logger->critical('OTP send exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
+          $message = 'User created, but verification service unavailable. Please try later.';
+      }
 
-        // Response
-        return $this->json([
+      return $this->json([
           'status' => JsonResponse::HTTP_CREATED,
           'message' => $message,
           'data' => [
-            'id' => $user->getId(),
-            'phone' => $user->getPhone()
+              'id' => $user->getId(),
+              'phone' => $user->getPhone(),
           ],
-        ], JsonResponse::HTTP_CREATED);
-    }
+      ], JsonResponse::HTTP_CREATED);
+  }
 
-    #[Route('/send-otp', name: 'send-otp', methods: ['POST'])]
-    public function sendOtp(
-        Request $request,
-    ): JsonResponse 
-    {
-        // TODO: sent OTP 
-        return $this->json([
-          "status" => JsonResponse::HTTP_OK,
-          "message" => "otp verified (stub)",
-          "data" => null
-        ]);
-    }
+  private function conflictResponse(): JsonResponse
+  {
+      return $this->json([
+          'status' => JsonResponse::HTTP_CONFLICT,
+          'message' => 'a user with this phone number already exists',
+          'data' => null,
+      ], JsonResponse::HTTP_CONFLICT);
+  }
 
-    #[Route('/verify-otp', name: 'verify-otp', methods: ['POST'])]
-    public function verifyOtp(Request $request): JsonResponse 
-    {
-        // TODO: OTP verification and JWT issuance
-        return $this->json([
-          "status" => JsonResponse::HTTP_OK,
-          "message" => "otp verified (stub)",
-          "data" => null
-        ]);
-    }
+  private function userExists(UserRepository $users, string $phone): bool
+  {
+      return $users->findOneBy(['phone' => $phone]) !== null;
+  }
 
-    #[Route('/login', name: 'login', methods: ['POST'])]
-    public function loginPassword(Request $request): JsonResponse
-    {
-        // TODO: Login by phone and password
+  private function validateRegisterInput(?array $data): ?JsonResponse
+  {
+      if (!$data) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Invalid JSON',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      if (empty($data['phone']) || empty($data['password']) || empty($data['firstName']) || empty($data['lastName'])) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Fields phone, password, firstName and lastName are required.',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      return null; // все ок
+  }
+
+
+  #[Route('/send-otp', name: 'send-otp', methods: ['POST'])]
+  public function sendOtp(
+      Request $request,
+  ): JsonResponse 
+  {
+      // TODO: sent OTP 
+      return $this->json([
+        "status" => JsonResponse::HTTP_OK,
+        "message" => "otp verified (stub)",
+        "data" => null
+      ]);
+  }
+
+  #[Route('/verify-otp', name: 'verify-otp', methods: ['POST'])]
+  public function verifyOtp(
+      Request $request,
+      UserRepository $users,
+      EntityManagerInterface $em,
+      \Psr\Log\LoggerInterface $logger,
+  ): JsonResponse 
+  {
+      $data = json_decode($request->getContent(), true);
+
+      if (!$data || empty($data['phone']) || empty($data['code'])) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Fields phone and code are required.',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      $phone = $data['phone'];
+      $code  = $data['code'];
+
+      $user = $users->findOneBy(['phone' => $phone]);
+      if (!$user) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_NOT_FOUND,
+              'message' => 'User with this phone not found.',
+              'data' => null,
+          ], JsonResponse::HTTP_NOT_FOUND);
+      }
+
+      try {
+          $result = $this->telnyxOtp->verifyOtp($phone, $code);
+      } catch (\Throwable $e) {
+          $logger->critical('OTP verify exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_SERVICE_UNAVAILABLE,
+              'message' => 'Verification service unavailable. Please try later.',
+              'data' => null,
+          ], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+      }
+
+      $responseCode = $result['data']['response_code'] ?? null;
+      if ($responseCode === 'accepted') {
+        $user->setIsVerified(true);
+        $user->setStatus('active');
+        $em->flush();
+
+        $logger->info('OTP verified', ['phone' => $phone, 'result' => $result]);
+
         return $this->json([
-          "status" => JsonResponse::HTTP_OK,
-          "message" => "login by password (stub)",
-          "data" => null
+          'status' => JsonResponse::HTTP_OK,
+          'message' => 'OTP verified successfully.',
+          'data' => null,
         ]);
-    }
+      }
+
+      if ($responseCode === 'rejected') {
+          $logger->warning('OTP rejected', ['phone' => $phone, 'result' => $result]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Verification code rejected.',
+              'data' => $result['data'],
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      if (isset($result['errors'])) {
+          $logger->warning('OTP verification request invalid', ['phone' => $phone, 'errors' => $result['errors']]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Verification request invalid.',
+              'errors' => $result['errors'],
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      $logger->warning('Unexpected OTP verification response', ['phone' => $phone, 'result' => $result]);
+
+      return $this->json([
+          'status' => JsonResponse::HTTP_BAD_GATEWAY,
+          'message' => 'Verification provider returned an unexpected response.',
+          'data' => $result,
+      ], JsonResponse::HTTP_BAD_GATEWAY);
+  }
+
+
+  #[Route('/login', name: 'login', methods: ['POST'])]
+  public function login(): void
+  {
+      throw new \LogicException('This method is intercepted by the firewall (json_login).');
+  }
+
 }

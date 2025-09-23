@@ -15,10 +15,11 @@ security:
             security: false
         
         login:
-            pattern: ^/api/login
+            pattern: ^/api/v1/auth/login
             stateless: true
+            user_checker: App\Security\UserChecker
             json_login:
-                check_path: /api/login
+                check_path: /api/v1/auth/login
                 username_path: phone    # <-- беремо телефон з JSON-запиту
                 password_path: password # <-- поки залишимо пароль (пізніше замінимо на SMS-код)
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -27,6 +28,7 @@ security:
         api:
             pattern: ^/api
             stateless: true
+            user_checker: App\Security\UserChecker
             jwt: ~
 
             # activate different ways to authenticate
@@ -43,9 +45,6 @@ security:
         - { path: ^/api/v1/auth/send-otp, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/auth/verify-otp, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/auth/login, roles: PUBLIC_ACCESS }
-
-          # стандартний login (json_login)
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
 
           # усе інше в /api тільки з JWT
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
