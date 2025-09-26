@@ -131,7 +131,7 @@ final class AuthController extends AbstractController
           ], JsonResponse::HTTP_BAD_REQUEST);
       }
 
-      return null; // все ок
+      return null; 
   }
 
 

@@ -1,0 +1,1647 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.editorconfig
+.env.dev
+.gitignore
+bin/console
+composer.json
+config/bundles.php
+config/packages/cache.yaml
+config/packages/doctrine_migrations.yaml
+config/packages/doctrine.yaml
+config/packages/framework.yaml
+config/packages/lexik_jwt_authentication.yaml
+config/packages/monolog.yaml
+config/packages/property_info.yaml
+config/packages/routing.yaml
+config/packages/security.yaml
+config/packages/validator.yaml
+config/preload.php
+config/routes.yaml
+config/routes/framework.yaml
+config/routes/security.yaml
+config/secrets/dev/dev.encrypt.public.php
+config/secrets/dev/dev.JWT_PASSPHRASE.0269d8.php
+config/secrets/dev/dev.list.php
+config/secrets/dev/dev.TELNYX_API_KEY.67910e.php
+config/secrets/prod/prod.encrypt.public.php
+config/secrets/prod/prod.JWT_PASSPHRASE.0269d8.php
+config/secrets/prod/prod.list.php
+config/secrets/prod/prod.TELNYX_API_KEY.67910e.php
+config/services.yaml
+migrations/Version20250918125648.php
+public/index.php
+src/Command/CreateVerifyProfileCommand.php
+src/Controller/AuthController.php
+src/Controller/ProfileController.php
+src/Entity/User.php
+src/Kernel.php
+src/Repository/UserRepository.php
+src/Security/UserChecker.php
+src/Service/TelnyxOtpService.php
+symfony.lock
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="config/secrets/dev/dev.JWT_PASSPHRASE.0269d8.php">
+<?php // dev.JWT_PASSPHRASE.0269d8 on Thu, 25 Sep 2025 14:31:12 +0200
+
+return "\x96\x8C\xAC\x02WU\xAA\xA2\xF04.\xA1\x29\x7F\x86\xB5\x9D\xB4\x0B\x8A\xD3\x0C\xBA\x90\xC1_t\x81\x036nH\xD4\x22\x8CAw\xE8\xA7\x92\xC4F\xB1\xFCI\x94\x91tw\x2C\x87R\x0C\x92\x12\x9B\x9C\xD2\x9D\xCA\x1E\xA5\xF8BD\xC8\xF4bh\x3C\xFE\x7F\xEC\xB6\xB2\xE2\x15\x23\x9A\xD4\x29l\x0Ci\x7B3\x5E\xD1\x01\x1D\xB7\x80I\x16\xB6\xE0\xB6\xED\xF5\x0A\xE3\xD6\xC3M\x0B\xDD\x0A\x8AD\x24\x18q";
+</file>
+
+<file path="config/secrets/prod/prod.JWT_PASSPHRASE.0269d8.php">
+<?php // prod.JWT_PASSPHRASE.0269d8 on Thu, 25 Sep 2025 14:37:00 +0200
+
+return "\x0E\x8D\x09\xFE\xF6\x04\x18\x8AM\xD0\xF3\xF4\x5E\xA1\x16\x8CC\xCA\x08\x94F\xA4B\xFEv\x7D\x5E\xEC\xFA\xA5\x27\x1A\x0Dj\x3A\x20n\xFA\xD9H\x8Bo\x7Df\xDF\x5D\x5E\x99\xFFx\xBE\x1A\x07\xF3\xD6y\x89\xBEK\x7B\xAF\x0C\x98\x26\xDA\x8D\xF11s\x21\x8B\xC5\x96\xF8\xB0\xD2\xB1\xC2j\xF5U\xEC3\xE0\x9ER\xFCw\x85\xCEr\xFD\x3B5\x85\x81\xA1\xB8\x8D\x9F\x2C\xC9H\xC8\xEC\x8Eat\xFB\x0B\xF4\xAC";
+</file>
+
+<file path=".editorconfig">
+# editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[{compose.yaml,compose.*.yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+</file>
+
+<file path=".env.dev">
+###> symfony/framework-bundle ###
+APP_SECRET=34e63873414e05148d865de5a219c504
+###< symfony/framework-bundle ###
+</file>
+
+<file path="bin/console">
+#!/usr/bin/env php
+<?php
+
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+if (!is_dir(dirname(__DIR__).'/vendor')) {
+    throw new LogicException('Dependencies are missing. Try running "composer install".');
+}
+
+if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
+    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
+}
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return function (array $context) {
+    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+
+    return new Application($kernel);
+};
+</file>
+
+<file path="config/packages/cache.yaml">
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        #prefix_seed: your_vendor_name/app_name
+
+        # The "app" cache stores to the filesystem by default.
+        # The data in this cache should persist between deploys.
+        # Other options include:
+
+        # Redis
+        #app: cache.adapter.redis
+        #default_redis_provider: redis://localhost
+
+        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
+        #app: cache.adapter.apcu
+
+        # Namespaced pools use the above "app" backend by default
+        #pools:
+            #my.dedicated.cache: null
+</file>
+
+<file path="config/packages/doctrine_migrations.yaml">
+doctrine_migrations:
+    migrations_paths:
+        # namespace is arbitrary but should be different from App\Migrations
+        # as migrations classes should NOT be autoloaded
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
+    enable_profiler: false
+</file>
+
+<file path="config/packages/doctrine.yaml">
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '16'
+
+        profiling_collect_backtrace: '%kernel.debug%'
+        use_savepoints: true
+    orm:
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        validate_xml_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        identity_generation_preferences:
+            Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
+        auto_mapping: true
+        mappings:
+            App:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        controller_resolver:
+            auto_mapping: false
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system
+</file>
+
+<file path="config/packages/framework.yaml">
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+</file>
+
+<file path="config/packages/monolog.yaml">
+monolog:
+    channels:
+        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
+            # uncomment to get logging in your browser
+            # you may have to allow bigger header sizes in your Web server configuration
+            #firephp:
+            #    type: firephp
+            #    level: info
+            #chromephp:
+            #    type: chromephp
+            #    level: info
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine", "!console"]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                channels: ["!event"]
+            nested:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+            nested:
+                type: stream
+                path: php://stderr
+                level: debug
+                formatter: monolog.formatter.json
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine"]
+            deprecation:
+                type: stream
+                channels: [deprecation]
+                path: php://stderr
+                formatter: monolog.formatter.json
+</file>
+
+<file path="config/packages/property_info.yaml">
+framework:
+    property_info:
+        with_constructor_extractor: true
+</file>
+
+<file path="config/packages/routing.yaml">
+framework:
+    router:
+        # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+        # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+        #default_uri: http://localhost
+
+when@prod:
+    framework:
+        router:
+            strict_requirements: null
+</file>
+
+<file path="config/packages/validator.yaml">
+framework:
+    validation:
+        # Enables validator auto-mapping support.
+        # For instance, basic validation constraints will be inferred from Doctrine's metadata.
+        #auto_mapping:
+        #    App\Entity\: []
+
+when@test:
+    framework:
+        validation:
+            not_compromised_password: false
+</file>
+
+<file path="config/preload.php">
+<?php
+
+if (file_exists(dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php')) {
+    require dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php';
+}
+</file>
+
+<file path="config/routes/framework.yaml">
+when@dev:
+    _errors:
+        resource: '@FrameworkBundle/Resources/config/routing/errors.php'
+        prefix: /_error
+</file>
+
+<file path="config/routes/security.yaml">
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+</file>
+
+<file path="config/secrets/dev/dev.encrypt.public.php">
+<?php // dev.encrypt.public on Sun, 21 Sep 2025 13:17:17 +0200
+
+return "\x86KqV6B\xBD\x2C\x17H\xAF\xF3\xB8A\x9An\x14p\xC0\xC5\x17\x21\x03\xCFT\xFA\x27\xC5j7M\x05";
+</file>
+
+<file path="config/secrets/dev/dev.list.php">
+<?php
+
+return [
+    'JWT_PASSPHRASE' => null,
+    'TELNYX_API_KEY' => null,
+];
+</file>
+
+<file path="config/secrets/dev/dev.TELNYX_API_KEY.67910e.php">
+<?php // dev.TELNYX_API_KEY.67910e on Sun, 21 Sep 2025 15:45:36 +0200
+
+return "V\xDC\xF6\x87yq\xAE\xDCV\x08\x24\x0D\x1B\xBEN\xD7\xEE\x0C\xFEfd\x89\xFA\xDE\xC7\xC7G\xA1\xF5\x2F\xE1\x21\xA0\xAE\x93\xFCe\xCB\x7F\x2C\x23h\xA9\x13\x2C\xF6\xD32\xADR\xAD\xA4I\x24FD\xAC\x2B\xF7\x3E\xCC\x84q\x85\x18\xAEH\x7D\xBE\x06\xCA\xD0\xC5a\x13\xBB\x259\xC6\x29\xA4\x23\x17\x88\xD6\x0D\x8D\xB4\xBC\x0C\x99N\x15\xDB\xF6\xFB\xCF\x93\x1Dy\xF41\xA6\xFD\x15\x27";
+</file>
+
+<file path="config/secrets/prod/prod.encrypt.public.php">
+<?php // prod.encrypt.public on Sun, 21 Sep 2025 15:17:24 +0200
+
+return "\x0B\xF2\x3A\x7B\x7Dd\x0C\x29\x15\x9C\xF4\xD7W\x93\x3Ej\x3F\x95\x60w\xACn\x19\x07\x0F\xB5\x82\x7C\xAB\xAC\xFE\x1B";
+</file>
+
+<file path="config/secrets/prod/prod.list.php">
+<?php
+
+return [
+    'JWT_PASSPHRASE' => null,
+    'TELNYX_API_KEY' => null,
+];
+</file>
+
+<file path="config/secrets/prod/prod.TELNYX_API_KEY.67910e.php">
+<?php // prod.TELNYX_API_KEY.67910e on Sun, 21 Sep 2025 15:37:24 +0200
+
+return "t\xB37\xA3NQ\xCF\x9F\xF3\xD9\x86\x93\xC9\xE4\x14\xB6\xB8\xAF\x99\x5D\xDCO\xDBQ\x82\x0C\x0A\xCF\x29\xDE\xF1\x0Fi\x19\xE4\xCD\x3B\xA7\x2Ae\x9C\x85\x94\xD1\x1C\x0B\xC7\x03\xEEj\x3F\xD4\x9E\x09\xAF\x8C\x95\x8C\x15\x0A\xFA\x98\x5C\xBD\xFE\x97\x3At\x7FN\xE2\x01\xE30\xF5\x9C\x28\x98m\x18.\xE9dL\xA3\x28\x90\xA2\x3F\x97\xBD~ss\xCD\xCB\xDE\xDB\x87\xE7\xAD\xC5\xED\xFE\x0B\x2F";
+</file>
+
+<file path="migrations/Version20250918125648.php">
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20250918125648 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE user_otp (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, code VARCHAR(6) NOT NULL, expires_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', is_used TINYINT(1) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_4C8AF94AA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE user_otp ADD CONSTRAINT FK_4C8AF94AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE user CHANGE roles roles JSON NOT NULL, CHANGE updated_at updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\'');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE user_otp DROP FOREIGN KEY FK_4C8AF94AA76ED395');
+        $this->addSql('DROP TABLE user_otp');
+        $this->addSql('ALTER TABLE user CHANGE roles roles LONGTEXT NOT NULL COLLATE `utf8mb4_bin`, CHANGE updated_at updated_at DATETIME DEFAULT \'NULL\' COMMENT \'(DC2Type:datetime_immutable)\'');
+    }
+}
+</file>
+
+<file path="public/index.php">
+<?php
+
+use App\Kernel;
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};
+</file>
+
+<file path="src/Command/CreateVerifyProfileCommand.php">
+<?php
+
+namespace App\Command;
+
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpClient\HttpClient;
+
+#[AsCommand(
+    name: 'app:create-verify-profile',
+    description: 'Створює новий Verify Profile у Telnyx',
+)]
+class CreateVerifyProfileCommand extends Command
+{
+    public function __construct(
+        private string $telnyx_api_key,
+        private string $telnyx_message_template_id,
+        private string $projectDir, // %kernel.project_dir%
+    ) {
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+
+        // 1. Перевіряємо, чи є ключі
+        if (!$this->telnyx_api_key) {
+            $io->error('TELNYX_API_KEY не знайдений у secrets/env.');
+            return Command::FAILURE;
+        }
+
+        if (!$this->telnyx_message_template_id) {
+            $io->error('TELNYX_MESSAGE_TEMPLATE_ID не знайдений у secrets/env.');
+            return Command::FAILURE;
+        }
+
+        // 2. Формуємо payload
+        $payload = [
+            "name" => "Buch-SK",
+            "sms" => [
+                "messaging_template_id" => $this->telnyx_message_template_id,
+                "app_name" => "BuchSK",                             // обов'язково
+                "alpha_sender" => "BuchSK",                         // або свій бренд/назву
+                "code_length" => 5,
+                "whitelisted_destinations" => ["SK", "CZ", "AT", "DE"],
+                "default_verification_timeout_secs" => 300
+            ],
+            "language" => "en-US"                                   // залишаємо без "sk-SK", бо воно не підтримується
+        ];
+
+
+        $client = HttpClient::create();
+
+        try {
+            // 3. Відправляємо POST на Telnyx
+            $response = $client->request('POST', 'https://api.telnyx.com/v2/verify_profiles', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->telnyx_api_key,
+                    'Content-Type'  => 'application/json',
+                ],
+                'json' => $payload,
+            ]);
+
+            $result = $response->toArray(false);
+            $verifyProfileId = $result['data']['id'] ?? null;
+
+            if ($verifyProfileId) {
+                $io->success('✅ Verify Profile створено успішно!');
+                $io->writeln('ID: ' . $verifyProfileId);
+
+                // 4. Оновлюємо/додаємо у .env TELNYX_VERIFY_PROFILE_ID
+                $envFile = $this->projectDir . '/.env';
+                $env = file_exists($envFile) ? file_get_contents($envFile) : '';
+
+                if (preg_match('/^TELNYX_VERIFY_PROFILE_ID=.*$/m', $env)) {
+                    $env = preg_replace(
+                        '/^TELNYX_VERIFY_PROFILE_ID=.*$/m',
+                        'TELNYX_VERIFY_PROFILE_ID=' . $verifyProfileId,
+                        $env
+                    );
+                } else {
+                    $env .= "\nTELNYX_VERIFY_PROFILE_ID=" . $verifyProfileId . "\n";
+                }
+
+                file_put_contents($envFile, $env);
+                $io->writeln('ℹ️ ID оновлено у .env');
+            } else {
+                $io->warning('⚠️ Не вдалося отримати ID профілю');
+                $io->writeln(print_r($result, true));
+            }
+        } catch (\Throwable $e) {
+            $io->error('Помилка при виклику API: ' . $e->getMessage());
+            return Command::FAILURE;
+        }
+
+        return Command::SUCCESS;
+    }
+}
+</file>
+
+<file path="src/Controller/ProfileController.php">
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[Route('/profile', name: 'profile_')]
+final class ProfileController extends AbstractController
+{
+    #[Route('/me', name: 'me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+
+      /** @var \App\Entity\User $user */
+
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json([
+                'status' => 401,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        return $this->json([
+            'status' => 200,
+            'message' => 'User profile',
+            'data' => [
+                'id'        => $user->getId(),
+                'phone'     => $user->getPhone(),
+                'firstName' => $user->getFirstName(),
+                'lastName'  => $user->getLastName(),
+                'status'    => $user->getStatus(),
+                'isVerified'=> $user->isVerified(),
+                'roles'     => $user->getRoles(),
+            ],
+        ]);
+    }
+}
+</file>
+
+<file path="src/Kernel.php">
+<?php
+
+namespace App;
+
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+
+class Kernel extends BaseKernel
+{
+    use MicroKernelTrait;
+}
+</file>
+
+<file path="src/Repository/UserRepository.php">
+<?php
+
+namespace App\Repository;
+
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+
+/**
+ * @extends ServiceEntityRepository<User>
+ */
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     */
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+        }
+
+        $user->setPassword($newHashedPassword);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    //    /**
+    //     * @return User[] Returns an array of User objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('u.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?User
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
+}
+</file>
+
+<file path="src/Security/UserChecker.php">
+<?php
+
+namespace App\Security;
+
+use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
+
+final class UserChecker implements UserCheckerInterface
+{
+    public function checkPreAuth(UserInterface $user): void
+    {
+        if (!$user instanceof User) {
+            return;
+        }
+
+        // Заборона логіну, якщо не підтверджений
+        if (!$user->isVerified()) {
+            throw new CustomUserMessageAccountStatusException('Account is not verified. Please verify OTP first.');
+        }
+
+        // Опційно: ще й статус
+        if ($user->getStatus() !== 'active') {
+            throw new CustomUserMessageAccountStatusException('Account is not active.');
+        }
+    }
+
+    public function checkPostAuth(UserInterface $user): void
+    {
+        // Нічого
+    }
+}
+</file>
+
+<file path="config/packages/lexik_jwt_authentication.yaml">
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    token_ttl:    3600
+</file>
+
+<file path="config/routes.yaml">
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    prefix: /api/v1
+</file>
+
+<file path="src/Service/TelnyxOtpService.php">
+<?php
+namespace App\Service;
+
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+class TelnyxOtpService
+{
+    private string $apiKey;
+    private string $verifyProfileId;
+    private HttpClientInterface $http;
+
+    public function __construct(string $telnyx_api_key, string $telnyx_verify_profile_id, HttpClientInterface $http)
+    {
+        $this->apiKey = $telnyx_api_key;
+        $this->verifyProfileId = $telnyx_verify_profile_id;
+        $this->http = $http;
+    }
+
+    /**
+     * Надсилає OTP-код на телефон
+     */
+    public function sendOtp(string $phone): array
+    {
+        $response = $this->http->request('POST', 'https://api.telnyx.com/v2/verifications/sms', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ],
+            'json' => [
+                'phone_number'     => $phone,
+                'verify_profile_id'=> $this->verifyProfileId,
+                'timeout_secs'     => 300, 
+            ],
+        ]);
+
+        return $response->toArray(false);
+    }
+
+    /**
+     * Перевіряє OTP-код від користувача
+     */
+    public function verifyOtp(string $phone, string $code): array
+    {
+        $url = sprintf('https://api.telnyx.com/v2/verifications/by_phone_number/%s/actions/verify', $phone);
+
+        $response = $this->http->request('POST', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+            ],
+            'json' => [
+                'code'              => $code,
+                'verify_profile_id' => $this->verifyProfileId,
+            ],
+        ]);
+
+        return $response->toArray(false);
+    }
+}
+</file>
+
+<file path=".gitignore">
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/dev/dev.decrypt.private.php
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+</file>
+
+<file path="config/bundles.php">
+<?php
+
+return [
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
+    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+    Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
+    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
+    Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
+    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+];
+</file>
+
+<file path="config/packages/security.yaml">
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: phone
+        # used to reload user from session & other features (e.g. switch_user)
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/    
+            security: false
+        
+        login:
+            pattern: ^/api/v1/auth/login
+            stateless: true
+            user_checker: App\Security\UserChecker
+            json_login:
+                check_path: /api/v1/auth/login
+                username_path: phone    # <-- беремо телефон з JSON-запиту
+                password_path: password # <-- поки залишимо пароль (пізніше замінимо на SMS-код)
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        
+        api:
+            pattern: ^/api
+            stateless: true
+            user_checker: App\Security\UserChecker
+            jwt: ~
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+          # дозволяємо всі auth-ендпойнти без JWT
+        - { path: ^/api/v1/auth/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth/send-otp, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth/verify-otp, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth/login, roles: PUBLIC_ACCESS }
+
+          # усе інше в /api тільки з JWT
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
+</file>
+
+<file path="config/services.yaml">
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    telnyx_api_key: '%env(TELNYX_API_KEY)%'
+    telnyx_message_template_id: '%env(TELNYX_MESSAGE_TEMPLATE_ID)%'
+    telnyx_verify_profile_id: '%env(TELNYX_VERIFY_PROFILE_ID)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+
+    # явна конфігурація для нашої команди
+    App\Command\CreateVerifyProfileCommand:
+        arguments:
+            $telnyx_api_key: '%telnyx_api_key%'
+            $telnyx_message_template_id: '%telnyx_message_template_id%'
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\TelnyxOtpService:
+        arguments:
+            $telnyx_api_key: '%telnyx_api_key%'
+            $telnyx_verify_profile_id: '%telnyx_verify_profile_id%'
+</file>
+
+<file path="src/Controller/AuthController.php">
+<?php
+
+namespace App\Controller;
+
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
+use App\Service\TelnyxOtpService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+
+#[Route('/auth', name: 'auth_')]
+final class AuthController extends AbstractController
+{
+    public function __construct(
+      private TelnyxOtpService $telnyxOtp,
+    ) {}
+
+  #[Route('/register', name: 'register', methods: ['POST'])]
+  public function register(
+      Request $request,
+      EntityManagerInterface $em,
+      UserPasswordHasherInterface $hasher,
+      UserRepository $users,
+      \Psr\Log\LoggerInterface $logger,
+  ): JsonResponse 
+  {
+      $data = json_decode($request->getContent(), true);
+
+      // validation
+      $validationError = $this->validateRegisterInput($data);
+      if ($validationError !== null) {
+          return $validationError;
+      }
+
+      $phone = $data['phone'];
+      $password = $data['password'];
+      $firstName = $data['firstName'];
+      $lastName = $data['lastName'];
+
+      // uniqueness check
+      if ($this->userExists($users, $phone)) {
+          return $this->conflictResponse();
+      }
+
+      // create user
+      $user = new User();
+      $user->setPhone($phone);
+      $user->setFirstName($firstName);
+      $user->setLastName($lastName);
+      $user->setStatus('pending');
+      $user->setIsVerified(false);
+
+      $hashed = $hasher->hashPassword($user, $password);
+      $user->setPassword($hashed);
+
+      try {
+          $em->persist($user);
+          $em->flush();
+      } catch (UniqueConstraintViolationException $e) {
+          $logger->warning('User creation failed: phone already exists', [
+              'phone' => $phone,
+              'error' => $e->getMessage(),
+          ]);
+
+          return $this->conflictResponse();
+      }
+
+      // send OTP
+      try {
+          $result = $this->telnyxOtp->sendOtp($phone);
+
+          if (isset($result['data'])) {
+              $logger->info('OTP sent', ['phone' => $phone, 'result' => $result]);
+              $message = 'User created. Verification SMS sent.';
+          } elseif (isset($result['errors'])) {
+              $logger->error('OTP sending failed', ['phone' => $phone, 'errors' => $result['errors']]);
+              $message = 'User created, but OTP failed to send. Please try resend.';
+          } else {
+              $logger->warning('Unexpected OTP response', ['phone' => $phone, 'result' => $result]);
+              $message = 'User created, but verification service returned unexpected response.';
+          }
+      } catch (\Throwable $e) {
+          $logger->critical('OTP send exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
+          $message = 'User created, but verification service unavailable. Please try later.';
+      }
+
+      return $this->json([
+          'status' => JsonResponse::HTTP_CREATED,
+          'message' => $message,
+          'data' => [
+              'id' => $user->getId(),
+              'phone' => $user->getPhone(),
+          ],
+      ], JsonResponse::HTTP_CREATED);
+  }
+
+  private function conflictResponse(): JsonResponse
+  {
+      return $this->json([
+          'status' => JsonResponse::HTTP_CONFLICT,
+          'message' => 'a user with this phone number already exists',
+          'data' => null,
+      ], JsonResponse::HTTP_CONFLICT);
+  }
+
+  private function userExists(UserRepository $users, string $phone): bool
+  {
+      return $users->findOneBy(['phone' => $phone]) !== null;
+  }
+
+  private function validateRegisterInput(?array $data): ?JsonResponse
+  {
+      if (!$data) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Invalid JSON',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      if (empty($data['phone']) || empty($data['password']) || empty($data['firstName']) || empty($data['lastName'])) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Fields phone, password, firstName and lastName are required.',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      return null; 
+  }
+
+
+  #[Route('/send-otp', name: 'send-otp', methods: ['POST'])]
+  public function sendOtp(
+      Request $request,
+  ): JsonResponse 
+  {
+      // TODO: sent OTP 
+      return $this->json([
+        "status" => JsonResponse::HTTP_OK,
+        "message" => "otp verified (stub)",
+        "data" => null
+      ]);
+  }
+
+  #[Route('/verify-otp', name: 'verify-otp', methods: ['POST'])]
+  public function verifyOtp(
+      Request $request,
+      UserRepository $users,
+      EntityManagerInterface $em,
+      \Psr\Log\LoggerInterface $logger,
+  ): JsonResponse 
+  {
+      $data = json_decode($request->getContent(), true);
+
+      if (!$data || empty($data['phone']) || empty($data['code'])) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Fields phone and code are required.',
+              'data' => null,
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      $phone = $data['phone'];
+      $code  = $data['code'];
+
+      $user = $users->findOneBy(['phone' => $phone]);
+      if (!$user) {
+          return $this->json([
+              'status' => JsonResponse::HTTP_NOT_FOUND,
+              'message' => 'User with this phone not found.',
+              'data' => null,
+          ], JsonResponse::HTTP_NOT_FOUND);
+      }
+
+      try {
+          $result = $this->telnyxOtp->verifyOtp($phone, $code);
+      } catch (\Throwable $e) {
+          $logger->critical('OTP verify exception', ['phone' => $phone, 'exception' => $e->getMessage()]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_SERVICE_UNAVAILABLE,
+              'message' => 'Verification service unavailable. Please try later.',
+              'data' => null,
+          ], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+      }
+
+      $responseCode = $result['data']['response_code'] ?? null;
+      if ($responseCode === 'accepted') {
+        $user->setIsVerified(true);
+        $user->setStatus('active');
+        $em->flush();
+
+        $logger->info('OTP verified', ['phone' => $phone, 'result' => $result]);
+
+        return $this->json([
+          'status' => JsonResponse::HTTP_OK,
+          'message' => 'OTP verified successfully.',
+          'data' => null,
+        ]);
+      }
+
+      if ($responseCode === 'rejected') {
+          $logger->warning('OTP rejected', ['phone' => $phone, 'result' => $result]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Verification code rejected.',
+              'data' => $result['data'],
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      if (isset($result['errors'])) {
+          $logger->warning('OTP verification request invalid', ['phone' => $phone, 'errors' => $result['errors']]);
+
+          return $this->json([
+              'status' => JsonResponse::HTTP_BAD_REQUEST,
+              'message' => 'Verification request invalid.',
+              'errors' => $result['errors'],
+          ], JsonResponse::HTTP_BAD_REQUEST);
+      }
+
+      $logger->warning('Unexpected OTP verification response', ['phone' => $phone, 'result' => $result]);
+
+      return $this->json([
+          'status' => JsonResponse::HTTP_BAD_GATEWAY,
+          'message' => 'Verification provider returned an unexpected response.',
+          'data' => $result,
+      ], JsonResponse::HTTP_BAD_GATEWAY);
+  }
+
+
+  #[Route('/login', name: 'login', methods: ['POST'])]
+  public function login(): void
+  {
+      throw new \LogicException('This method is intercepted by the firewall (json_login).');
+  }
+
+}
+</file>
+
+<file path="src/Entity/User.php">
+<?php
+
+namespace App\Entity;
+
+use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_PHONE', fields: ['phone'])]
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 180)]
+    private ?string $phone = null;
+
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $status = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column]
+    private ?bool $isVerified = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->phone;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
+    }
+
+    #[\Deprecated]
+    public function eraseCredentials(): void
+    {
+        // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+}
+</file>
+
+<file path="symfony.lock">
+{
+    "doctrine/deprecations": {
+        "version": "1.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "87424683adc81d7dc305eefec1fced883084aab9"
+        }
+    },
+    "doctrine/doctrine-bundle": {
+        "version": "2.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.13",
+            "ref": "620b57f496f2e599a6015a9fa222c2ee0a32adcb"
+        },
+        "files": [
+            "./config/packages/doctrine.yaml",
+            "./src/Entity/.gitignore",
+            "./src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.1",
+            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
+        },
+        "files": [
+            "./config/packages/doctrine_migrations.yaml",
+            "./migrations/.gitignore"
+        ]
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "3.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.5",
+            "ref": "e9481b233a11ef7e15fe055a2b21fd3ac1aa2bb7"
+        },
+        "files": [
+            "./config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
+    "symfony/console": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "1781ff40d8a17d87cf53f8d4cf0c8346ed2bb461"
+        },
+        "files": [
+            "./bin/console"
+        ]
+    },
+    "symfony/flex": {
+        "version": "2.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.4",
+            "ref": "52e9754527a15e2b79d9a610f98185a1fe46622a"
+        },
+        "files": [
+            "./.env",
+            "./.env.dev"
+        ]
+    },
+    "symfony/framework-bundle": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.3",
+            "ref": "5a1497d539f691b96afd45ae397ce5fe30beb4b9"
+        },
+        "files": [
+            "./config/packages/cache.yaml",
+            "./config/packages/framework.yaml",
+            "./config/preload.php",
+            "./config/routes/framework.yaml",
+            "./config/services.yaml",
+            "./public/index.php",
+            "./src/Controller/.gitignore",
+            "./src/Kernel.php",
+            "./.editorconfig"
+        ]
+    },
+    "symfony/maker-bundle": {
+        "version": "1.64",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.7",
+            "ref": "aff23899c4440dd995907613c1dd709b6f59503f"
+        },
+        "files": [
+            "./config/packages/monolog.yaml"
+        ]
+    },
+    "symfony/property-info": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.3",
+            "ref": "dae70df71978ae9226ae915ffd5fad817f5ca1f7"
+        },
+        "files": [
+            "./config/packages/property_info.yaml"
+        ]
+    },
+    "symfony/routing": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.0",
+            "ref": "21b72649d5622d8f7da329ffb5afb232a023619d"
+        },
+        "files": [
+            "./config/packages/routing.yaml",
+            "./config/routes.yaml"
+        ]
+    },
+    "symfony/security-bundle": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "2ae08430db28c8eb4476605894296c82a642028f"
+        },
+        "files": [
+            "./config/packages/security.yaml",
+            "./config/routes/security.yaml"
+        ]
+    },
+    "symfony/validator": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.0",
+            "ref": "8c1c4e28d26a124b0bb273f537ca8ce443472bfd"
+        },
+        "files": [
+            "./config/packages/validator.yaml"
+        ]
+    }
+}
+</file>
+
+<file path="composer.json">
+{
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "doctrine/dbal": "^3",
+        "doctrine/doctrine-bundle": "^2.16",
+        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/orm": "^3.5",
+        "lexik/jwt-authentication-bundle": "^3.1",
+        "symfony/console": "7.3.*",
+        "symfony/dotenv": "7.3.*",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/http-client": "7.3.*",
+        "symfony/monolog-bundle": "^3.10",
+        "symfony/runtime": "7.3.*",
+        "symfony/security-bundle": "7.3.*",
+        "symfony/validator": "7.3.*",
+        "symfony/yaml": "7.3.*",
+        "twilio/sdk": "^8.8"
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.64"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "bump-after-update": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.3.*"
+        }
+    }
+}
+</file>
+
+</files>
